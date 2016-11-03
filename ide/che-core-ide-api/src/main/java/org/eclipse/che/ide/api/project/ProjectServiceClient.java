@@ -14,6 +14,7 @@ import org.eclipse.che.api.project.shared.dto.ItemReference;
 import org.eclipse.che.api.project.shared.dto.SourceEstimation;
 import org.eclipse.che.api.project.shared.dto.TreeElement;
 import org.eclipse.che.api.promises.client.Promise;
+import org.eclipse.che.api.workspace.shared.dto.CreateProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.ProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.SourceStorageDto;
 import org.eclipse.che.ide.resource.Path;
@@ -91,6 +92,19 @@ public interface ProjectServiceClient {
      * @since 4.4.0
      */
     Promise<ProjectConfigDto> createProject(ProjectConfigDto configuration, Map<String, String> options);
+
+    /**
+     * Creates the project with given {@code configuration}.
+     *
+     * @param configuration
+     *         the project configuration
+     * @param options
+     *         additional parameters that need for project generation
+     * @return {@link Promise} with the {@link ProjectConfigDto}
+     * @see ProjectConfigDto
+     * @since 4.4.0
+     */
+    Promise<List<ProjectConfigDto>> createBatchProjects(List<CreateProjectConfigDto> configurations);
 
     /**
      * Returns the item description by given {@code path}.

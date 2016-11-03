@@ -31,12 +31,12 @@ import org.eclipse.che.ide.projecttype.wizard.categoriespage.CategoriesPagePrese
 import org.eclipse.che.ide.resource.Path;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.CREATE;
-import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.IMPORT;
 import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.UPDATE;
 
 /**
@@ -54,6 +54,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                                CategoriesPagePresenter.ProjectTypeSelectionListener,
                                                CategoriesPagePresenter.ProjectTemplateSelectionListener {
 
+    private final Provider<MutableProjectConfig>     projectConfigProvider;
     private final ProjectWizardView                  view;
     private final ProjectWizardFactory               projectWizardFactory;
     private final ProjectWizardRegistry              wizardRegistry;
@@ -62,7 +63,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     private final Map<ProjectTypeDto, ProjectWizard> wizardsCache;
     private       CategoriesPagePresenter            categoriesPage;
     private       ProjectWizard                      wizard;
-    private       ProjectWizard                      importWizard;
     private       WizardPage                         currentPage;
 
     private ProjectWizardMode wizardMode;
@@ -72,11 +72,13 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                   ProjectWizardFactory projectWizardFactory,
                                   ProjectWizardRegistry wizardRegistry,
                                   Provider<CategoriesPagePresenter> categoriesPageProvider,
+                                  Provider<MutableProjectConfig> projectConfigProvider,
                                   DialogFactory dialogFactory) {
         this.view = view;
         this.projectWizardFactory = projectWizardFactory;
         this.wizardRegistry = wizardRegistry;
         this.categoriesPageProvider = categoriesPageProvider;
+        this.projectConfigProvider = projectConfigProvider;
         this.dialogFactory = dialogFactory;
         wizardsCache = new HashMap<>();
         view.setDelegate(this);
@@ -154,7 +156,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         wizardMode = null;
         categoriesPage.setProjectTypeSelectionListener(this);
         categoriesPage.setProjectTemplateSelectionListener(this);
-        importWizard = null;
     }
 
     private void showDialog(@Nullable MutableProjectConfig dataObject) {
@@ -199,12 +200,27 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     @Override
     public void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplate) {
         final MutableProjectConfig dataObject = wizard.getDataObject();
-        wizard = importWizard == null ? importWizard = createDefaultWizard(dataObject, IMPORT) : importWizard;
+        wizard = createDefaultWizard(dataObject, wizardMode);
         wizard.navigateToFirst();
 
         // set dataObject's values from projectTemplate
+        dataObject.setPath(projectTemplate.getPath());
         dataObject.setType(projectTemplate.getProjectType());
         dataObject.setSource(projectTemplate.getSource());
+
+        List<ProjectTemplateDescriptor> subProjects = projectTemplate.getProjects();
+        List<MutableProjectConfig> subProjectConfigs = new ArrayList<>(subProjects.size());
+        for (ProjectTemplateDescriptor projectTemplateDescriptor : subProjects) {
+            MutableProjectConfig subProjectConfig = projectConfigProvider.get();
+            subProjectConfig.setPath(projectTemplateDescriptor.getPath());
+            subProjectConfig.setType(projectTemplateDescriptor.getProjectType());
+            subProjectConfig.setSource(projectTemplateDescriptor.getSource());
+            subProjectConfig.setAttributes(projectTemplateDescriptor.getAttributes());
+            subProjectConfig.setOptions(projectTemplateDescriptor.getOptions());
+
+            subProjectConfigs.add(subProjectConfig);
+        }
+        dataObject.setProjects(subProjectConfigs);
     }
 
     /** Creates or returns project wizard for the specified projectType with the given dataObject. */

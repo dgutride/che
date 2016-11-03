@@ -12,7 +12,6 @@ package org.eclipse.che.api.project.templates.shared.dto;
 
 import org.eclipse.che.api.core.rest.shared.dto.Link;
 import org.eclipse.che.api.machine.shared.dto.CommandDto;
-import org.eclipse.che.api.workspace.shared.dto.ProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.ProjectProblemDto;
 import org.eclipse.che.api.workspace.shared.dto.SourceStorageDto;
 import org.eclipse.che.dto.shared.DTO;
@@ -110,4 +109,16 @@ public interface ProjectTemplateDescriptor {
     void setTags(List<String> tags);
 
     ProjectTemplateDescriptor withTags(List<String> tags);
+
+    List<ProjectTemplateDescriptor> getProjects();
+
+    void setProjects(List<ProjectTemplateDescriptor> projects);
+
+    ProjectTemplateDescriptor withProjects(List<ProjectTemplateDescriptor> projects);
+
+    Map<String, String> getOptions();
+
+    void setOptions(Map<String, String> options);
+
+    ProjectTemplateDescriptor withOptions(Map<String, String> options);
 }

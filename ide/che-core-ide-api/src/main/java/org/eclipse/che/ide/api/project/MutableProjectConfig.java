@@ -29,14 +29,15 @@ import static com.google.common.collect.Maps.newHashMap;
 @Beta
 public class MutableProjectConfig implements ProjectConfig {
 
-    private String                    name;
-    private String                    path;
-    private String                    description;
-    private String                    type;
-    private List<String>              mixins;
-    private Map<String, List<String>> attributes;
-    private MutableSourceStorage      sourceStorage;
-    private Map<String, String>       options;
+    private String                     name;
+    private String                     path;
+    private String                     description;
+    private String                     type;
+    private List<String>               mixins;
+    private Map<String, List<String>>  attributes;
+    private MutableSourceStorage       sourceStorage;
+    private Map<String, String>        options;
+    private List<MutableProjectConfig> projects;
 
     public MutableProjectConfig(ProjectConfig source) {
         name = source.getName();
@@ -135,6 +136,17 @@ public class MutableProjectConfig implements ProjectConfig {
 
     public void setOptions(Map<String, String> options) {
         this.options = options;
+    }
+
+    public List<MutableProjectConfig> getProjects() {
+        if (projects == null) {
+            return new ArrayList<>();
+        }
+        return projects;
+    }
+
+    public void setProjects(List<MutableProjectConfig> projects) {
+        this.projects = projects;
     }
 
     public class MutableSourceStorage implements SourceStorage {
