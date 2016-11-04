@@ -426,11 +426,11 @@ public final class ResourceManager {
                 }
 
                 final MutableProjectConfig projectConfig = (MutableProjectConfig)createRequest.getBody();
-                final List<MutableProjectConfig> subProjects = projectConfig.getProjects();
-                final List<CreateProjectConfigDto> projectConfigList = new ArrayList<>(subProjects.size() + 1);
+                final List<MutableProjectConfig> projects = projectConfig.getProjects();
+                final List<CreateProjectConfigDto> projectConfigList = new ArrayList<>(projects.size() + 1);
                 projectConfigList.add(toCreateProjectConfig(projectConfig));
 
-                for(MutableProjectConfig config : subProjects) {
+                for(MutableProjectConfig config : projects) {
                     projectConfigList.add(toCreateProjectConfig(config));
                 }
 

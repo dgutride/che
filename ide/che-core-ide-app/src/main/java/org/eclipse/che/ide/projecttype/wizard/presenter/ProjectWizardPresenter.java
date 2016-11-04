@@ -208,19 +208,19 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         dataObject.setType(projectTemplate.getProjectType());
         dataObject.setSource(projectTemplate.getSource());
 
-        List<ProjectTemplateDescriptor> subProjects = projectTemplate.getProjects();
-        List<MutableProjectConfig> subProjectConfigs = new ArrayList<>(subProjects.size());
-        for (ProjectTemplateDescriptor projectTemplateDescriptor : subProjects) {
-            MutableProjectConfig subProjectConfig = projectConfigProvider.get();
-            subProjectConfig.setPath(projectTemplateDescriptor.getPath());
-            subProjectConfig.setType(projectTemplateDescriptor.getProjectType());
-            subProjectConfig.setSource(projectTemplateDescriptor.getSource());
-            subProjectConfig.setAttributes(projectTemplateDescriptor.getAttributes());
-            subProjectConfig.setOptions(projectTemplateDescriptor.getOptions());
+        List<ProjectTemplateDescriptor> projects = projectTemplate.getProjects();
+        List<MutableProjectConfig> projectConfigList = new ArrayList<>(projects.size());
+        for (ProjectTemplateDescriptor projectTemplateDescriptor : projects) {
+            MutableProjectConfig projectConfig = projectConfigProvider.get();
+            projectConfig.setPath(projectTemplateDescriptor.getPath());
+            projectConfig.setType(projectTemplateDescriptor.getProjectType());
+            projectConfig.setSource(projectTemplateDescriptor.getSource());
+            projectConfig.setAttributes(projectTemplateDescriptor.getAttributes());
+            projectConfig.setOptions(projectTemplateDescriptor.getOptions());
 
-            subProjectConfigs.add(subProjectConfig);
+            projectConfigList.add(projectConfig);
         }
-        dataObject.setProjects(subProjectConfigs);
+        dataObject.setProjects(projectConfigList);
     }
 
     /** Creates or returns project wizard for the specified projectType with the given dataObject. */
