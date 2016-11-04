@@ -167,8 +167,20 @@ public class CategoriesPagePresenter extends AbstractWizardPage<MutableProjectCo
 
     @Override
     public void projectNameChanged(String name) {
+        String currentProjectPath = dataObject.getPath();
+        String newProjectPath = originParent.append(name).toString();
+
+        List<MutableProjectConfig> projectConfigList = dataObject.getProjects();
+        for (MutableProjectConfig projectConfig : projectConfigList) {
+            String projectPath = projectConfig.getPath();
+            if (projectPath.startsWith(currentProjectPath)) {
+                String path = projectPath.replaceFirst(currentProjectPath, newProjectPath);
+                projectConfig.setPath(path);
+            }
+        }
+
         dataObject.setName(name);
-        dataObject.setPath(originParent.append(name).toString());
+        dataObject.setPath(newProjectPath);
         updateDelegate.updateControls();
 
         if (NameUtils.checkProjectName(name)) {
