@@ -471,9 +471,9 @@ public final class ResourceManager {
     private CreateProjectConfigDto toCreateProjectConfig(MutableProjectConfig config) {
         final SourceStorage source = config.getSource();
         final SourceStorageDto sourceStorageDto = dtoFactory.createDto(SourceStorageDto.class)
+                                                            .withType(source.getType())
                                                             .withLocation(source.getLocation())
-                                                            .withParameters(source.getParameters())
-                                                            .withType(source.getType());
+                                                            .withParameters(source.getParameters());
 
         return dtoFactory.createDto(CreateProjectConfigDto.class)
                          .withName(config.getName())

@@ -219,7 +219,7 @@ public class ProjectServiceClientImpl implements ProjectServiceClient {
     @Override
     public Promise<List<ProjectConfigDto>> createBatchProjects(List<CreateProjectConfigDto> configurations) {
         final String url = getBaseUrl() + "/batch";
-        final String loaderMessage = configurations.size() > 1 ? "Creating batch projects..." : "Creating project...";
+        final String loaderMessage = configurations.size() > 1 ? "Creating the batch of projects..." : "Creating project...";
         return reqFactory.createPostRequest(url, configurations)
                          .header(ACCEPT, MimeType.APPLICATION_JSON)
                          .loader(loaderFactory.newLoader(loaderMessage))

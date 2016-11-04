@@ -94,15 +94,12 @@ public interface ProjectServiceClient {
     Promise<ProjectConfigDto> createProject(ProjectConfigDto configuration, Map<String, String> options);
 
     /**
-     * Creates the project with given {@code configuration}.
+     * Creates the batch of projects with given {@code configuration}s.
      *
-     * @param configuration
-     *         the project configuration
-     * @param options
-     *         additional parameters that need for project generation
-     * @return {@link Promise} with the {@link ProjectConfigDto}
+     * @param configurations
+     *         the list of configurations to creating projects
+     * @return {@link Promise} with the list of {@link ProjectConfigDto}
      * @see ProjectConfigDto
-     * @since 4.4.0
      */
     Promise<List<ProjectConfigDto>> createBatchProjects(List<CreateProjectConfigDto> configurations);
 

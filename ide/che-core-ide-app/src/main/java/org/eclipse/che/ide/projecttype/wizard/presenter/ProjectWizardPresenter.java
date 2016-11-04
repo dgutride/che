@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.eclipse.che.api.core.model.project.SourceStorage;
 import org.eclipse.che.api.project.shared.dto.AttributeDto;
 import org.eclipse.che.api.project.shared.dto.ProjectTypeDto;
 import org.eclipse.che.api.project.templates.shared.dto.ProjectTemplateDescriptor;
@@ -29,6 +30,7 @@ import org.eclipse.che.ide.projecttype.wizard.ProjectWizard;
 import org.eclipse.che.ide.projecttype.wizard.ProjectWizardFactory;
 import org.eclipse.che.ide.projecttype.wizard.categoriespage.CategoriesPagePresenter;
 import org.eclipse.che.ide.resource.Path;
+import org.eclipse.che.ide.util.loging.Log;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.CREATE;
+import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.IMPORT;
 import static org.eclipse.che.ide.api.project.type.wizard.ProjectWizardMode.UPDATE;
 
 /**
@@ -169,7 +172,17 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
     @Override
     public void onProjectTypeSelected(ProjectTypeDto projectType) {
+        // some values should be cleared when user switch between categories
         final MutableProjectConfig prevData = wizard.getDataObject();
+
+        MutableProjectConfig.MutableSourceStorage sourceStorage = prevData.getSource();
+        if (sourceStorage != null) {
+            sourceStorage.setLocation("");
+            sourceStorage.setType("");
+            sourceStorage.getParameters().clear();
+        }
+        prevData.getProjects().clear();
+
         wizard = getWizardForProjectType(projectType, prevData);
         wizard.navigateToFirst();
         final MutableProjectConfig newProject = wizard.getDataObject();
@@ -200,7 +213,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     @Override
     public void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplate) {
         final MutableProjectConfig dataObject = wizard.getDataObject();
-        wizard = createDefaultWizard(dataObject, wizardMode);
+        wizard = createDefaultWizard(dataObject, IMPORT);
         wizard.navigateToFirst();
 
         // set dataObject's values from projectTemplate

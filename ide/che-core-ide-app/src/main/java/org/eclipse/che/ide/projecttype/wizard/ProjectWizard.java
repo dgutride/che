@@ -28,6 +28,7 @@ import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Project;
 import org.eclipse.che.ide.api.wizard.AbstractWizard;
 import org.eclipse.che.ide.resource.Path;
+import org.eclipse.che.ide.util.loging.Log;
 
 import javax.validation.constraints.NotNull;
 
@@ -99,7 +100,7 @@ public class ProjectWizard extends AbstractWizard<MutableProjectConfig> {
             });
         } else if (mode == IMPORT) {
             appContext.getWorkspaceRoot()
-                      .importProject()
+                      .newProject()
                       .withBody(dataObject)
                       .send()
                       .thenPromise(new Function<Project, Promise<Project>>() {

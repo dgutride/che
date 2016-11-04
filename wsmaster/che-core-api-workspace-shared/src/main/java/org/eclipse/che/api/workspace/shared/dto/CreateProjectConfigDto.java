@@ -20,6 +20,8 @@ import java.util.Map;
 import static org.eclipse.che.api.core.factory.FactoryParameter.Obligation.OPTIONAL;
 
 /**
+ * Data transfer object (DTO) for creating of project.
+ *
  * @author Roman Nikitenko
  */
 @DTO
